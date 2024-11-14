@@ -21,6 +21,8 @@ COMP150-AB8 Term Project
  To-do:
     number 5, and think of new features
     maybe GUI using SDL?
+    let user drag the .txt file theyd like to use onto the executable 
+    sometimes will skip through multiple questions leaving blank answers
 
 Created by Trey Bertram on 2024-11-11.
 */
@@ -38,6 +40,8 @@ bool checkAnswer(string question);
 
 bool displayOEQuestion(string question);
 bool displayMCQuestion(string question);
+
+void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleChoiceQuestions);
 
 //generates a random integer within a specified range
 int randNum(int start, int end) {
@@ -79,6 +83,20 @@ int main(int argc, char *argv[]) {
         }
     }
     
+    rollQuestions(openEndedQuestions, multipleChoiceQuestions);
+    
+    //nice congratulations message
+    cout << "Congratulations on completing the quiz!\n";
+    
+    //keeps terminal open until user presses enter (only an issue on windows?)
+    cout << "Press Enter to exit..."; 
+    cin.ignore(); 
+    cin.get(); 
+    
+    return 0;
+}
+
+void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleChoiceQuestions) {
     //define current index
     int currentIndex;
     //while either the open ended or multiple chioce vectors are not empty...
@@ -102,60 +120,72 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    
-    //nice congratulations message
-    cout << "Congratulations on completing the quiz!\n";
-    
-    //keeps terminal open until user presses enter (only an issue on windows?)
-    cout << "Press Enter to exit..."; 
-    cin.ignore(); 
-    cin.get(); 
-    
-    return 0;
 }
 
 bool checkAnswer(string question, char userAnswer) {
+    //initialize answer position
     size_t answerPos = 0;
+    //the psoition of the answer character is immediately follwoing the '='
     answerPos = question.find('=');
     char answer = question[answerPos + 1];
+    //return true if the users answer matches the provided one
     return userAnswer == answer;
 }
 
 bool displayMCQuestion(string question) {
-    
+    //initalize question position 
     size_t questionPos = 0;
+    //the string::find method returns npos if the character is not found in the string
     if (question.find('?') != string::npos) {
+        //if a question mark is found then the question end position is equal to the position of it
         questionPos = question.find('?');
+        //else check for a perios and do same as before
     } else if (question.find('.') != string::npos) {
         questionPos = question.find('.');
     } else {
+        //else there is an issue
         std::cout << "Error parsing question string.\n";
     }
+    //question substring is from position 2 (after the M or O question identifier and the ' ') to the position of the first punctuation mark
     string questionText = question.substr(2, questionPos - 1);
+    //output the question
     cout << questionText << endl << endl;
     
+    //create a vector for every possible answer
     vector<string> answers;
+    //teh start of a potential answer is where the '~' is
+    //finds the first potential answer
     size_t start = question.find('~');
     
+    //while we have not reached the end of the string
     while (start != string::npos) {
+            //finds the next '~' starting from the position immediately after the last one, indicating the end of the answer
             size_t end = question.find('~', start + 1);
+            //if we have reached the end of the string
             if (end == string::npos) {
+                //append the remaining text to the vector then break out of the loop
                 answers.push_back(question.substr(start + 1));
                 break;
             } else {
+                //append potential answer
+                //answer starts after the position of the '~' and the length of the answer is the end position - start - 1
                 answers.push_back(question.substr(start + 1, end - start - 1));
             }
+            //set the start position of the next answer equal to the end of the current one
             start = end;
         }
     
+    //loop through answers vector outputting every answer
     for (int i = 0; i < answers.size() - 1; i++) {
         cout << answers[i] << endl;
     }
     
-    char userAnswer = 'A';
+    //prompt user for answer
+    char userAnswer;
     cout << "Enter answer: ";
     cin >> userAnswer;
     
+    //check answer
     if ( checkAnswer(question, userAnswer) ) {
         cout << "Correct!\n\n";
         return true;
@@ -165,7 +195,9 @@ bool displayMCQuestion(string question) {
     }
 }
 
+//check opeb ended answer
 bool checkAnswer(string question) {
+    //finds position of question end
     size_t questionPos = 0;
     if (question.find('?') != string::npos) {
         questionPos = question.find('?');
@@ -175,16 +207,21 @@ bool checkAnswer(string question) {
         std::cout << "Error parsing question string.\n";
     }
     
+    //answer is all the text following the question
     string answerText = question.substr(questionPos + 1);
     cout << answerText << endl;
     
-    char userAnswer = 'N';
+    //prompt user to self check if their answer matches the provided one
+    char userAnswer;
     cout << "Does your answer match the one provided? (Y/N): ";
     cin >> userAnswer;
+
+    //return resulkt
     return userAnswer == 'Y';
 }
 
 bool displayOEQuestion(string question) {
+    //find where question ends
     size_t questionPos = 0;
     if (question.find('?') != string::npos) {
         questionPos = question.find('?');
@@ -193,13 +230,16 @@ bool displayOEQuestion(string question) {
     } else {
         std::cout << "Error parsing question string.\n";
     }
+    //the question is all the text before the punctuation mark position
     string questionText = question.substr(2, questionPos - 1);
     cout << questionText << endl << endl;
     
+    //prompt user to enter answer
     string userAnswer = "";
     cout << "Enter answer: ";
     cin >> userAnswer;
     
+    //if they think their answer is adequate then return true
     if ( checkAnswer(question) ) {
         cout << "Correct!\n\n";
         return true;
