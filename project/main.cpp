@@ -29,13 +29,14 @@ Created by Trey Bertram on 2024-11-11.
 #include <vector>
 #include <string>
 #include <fstream>
+#include <ctime>
 using namespace std;
 
 bool checkAnswer(string question, char userAnswer);
 bool checkAnswer(string question);
 
 void displayOEQuestion(string question);
-void displayMCQuestion(string question);
+bool displayMCQuestion(string question);
 
 int randNum(int start, int end) {
     return start + (rand() % end);
@@ -49,8 +50,11 @@ int main(int argc, char *argv[]) {
     //import test file
     ifstream testFile;
     string line;
-    
-    testFile.open("/Users/treybertram/Desktop/testingTest.txt");
+
+    //for testing on macbook
+    //testFile.open("/Users/treybertram/Desktop/testingTest.txt");
+    //for testing on pc
+    testFile.open("test.txt");
     
     if (!testFile) {
         cout << "Error opening test file.\n";
@@ -73,22 +77,24 @@ int main(int argc, char *argv[]) {
             //store in oc vector
             //openQuestionsSize++;
             openEndedQuestions.push_back(line);
-            displayOEQuestion(line);
+            //displayOEQuestion(line);
         }
     }
     
-    
-    
-    
-    while ( !openEndedQuestions.empty() && !multipleChoiceQuestions.empty() ) {
-        if ( randNum(0, 2) ) {
-            //display multiple choice
+    int currentIndex;
+    while ( !openEndedQuestions.empty() || !multipleChoiceQuestions.empty() ) {
+        if ( randNum(0, 2) && !multipleChoiceQuestions.empty()) {
+            currentIndex = randNum(0, multipleChoiceQuestions.size());
+            if (displayMCQuestion(multipleChoiceQuestions[currentIndex])) {
+                multipleChoiceQuestions.erase(multipleChoiceQuestions.begin() + currentIndex);
+            }
             
-        } else {
-            //display open ended
+        } else if ( !openEndedQuestions.empty() ) {
+            displayOEQuestion(openEndedQuestions[randNum(0, openEndedQuestions.size())]);
         }
     }
     
+    cout << "Congratulations on completing the quiz!\n";
     
     
     return 0;
@@ -101,7 +107,7 @@ bool checkAnswer(string question, char userAnswer) {
     return userAnswer == answer;
 }
 
-void displayMultipleQuestion(string question) {
+bool displayMCQuestion(string question) {
     
     size_t questionPos = 0;
     if (question.find('?') != string::npos) {
@@ -138,8 +144,10 @@ void displayMultipleQuestion(string question) {
     
     if ( checkAnswer(question, userAnswer) ) {
         cout << "Correct!\n\n";
+        return true;
     } else {
         cout << "Wrong.\n\n";
+        return false;
     }
 }
 
