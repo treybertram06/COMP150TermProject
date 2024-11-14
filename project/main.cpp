@@ -19,7 +19,7 @@ COMP150-AB8 Term Project
  
  
  To-do:
-    numbers 3.5, 4, 5, and think of new features
+    number 5, and think of new features
     maybe GUI using SDL?
 
 Created by Trey Bertram on 2024-11-11.
@@ -32,12 +32,14 @@ Created by Trey Bertram on 2024-11-11.
 #include <ctime>
 using namespace std;
 
+//function prototypes
 bool checkAnswer(string question, char userAnswer);
 bool checkAnswer(string question);
 
-void displayOEQuestion(string question);
+bool displayOEQuestion(string question);
 bool displayMCQuestion(string question);
 
+//generates a random integer within a specified range
 int randNum(int start, int end) {
     return start + (rand() % end);
 }
@@ -51,9 +53,8 @@ int main(int argc, char *argv[]) {
     ifstream testFile;
     string line;
 
-    //for testing on macbook
     //testFile.open("/Users/treybertram/Desktop/testingTest.txt");
-    //for testing on pc
+
     testFile.open("test.txt");
     
     if (!testFile) {
@@ -61,41 +62,54 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
+    //vectors to store questions in
     vector<string> multipleChoiceQuestions;
     vector<string> openEndedQuestions;
-    //int openQuestionsSize = 0;
-    //int multipleQuestionsSize = 0;
     
     //parse file and put each question in its vector
     while ( getline(testFile, line) ) {
         if ( line[0] == 'M' ) {
             //store in mc vector
-            //multipleQuestionsSize++;
             multipleChoiceQuestions.push_back(line);
             //displayMCQuestion(line);
         } else if ( line[0] == 'O' ) {
             //store in oc vector
-            //openQuestionsSize++;
             openEndedQuestions.push_back(line);
             //displayOEQuestion(line);
         }
     }
     
+    //define current index
     int currentIndex;
+    //while either the open ended or multiple chioce vectors are not empty...
     while ( !openEndedQuestions.empty() || !multipleChoiceQuestions.empty() ) {
+        // picks between the multiple choice and open ended (66% MC and 33% OE)
+        //also checks that the selected vector is not empty and re-rolls if it is
         if ( randNum(0, 2) && !multipleChoiceQuestions.empty()) {
+            //picks a random question
             currentIndex = randNum(0, multipleChoiceQuestions.size());
+            //if the user gets the question correct the function returns true
             if (displayMCQuestion(multipleChoiceQuestions[currentIndex])) {
+                //erase question that user got correct
                 multipleChoiceQuestions.erase(multipleChoiceQuestions.begin() + currentIndex);
             }
-            
+            //checks that oe vector is not empty
         } else if ( !openEndedQuestions.empty() ) {
-            displayOEQuestion(openEndedQuestions[randNum(0, openEndedQuestions.size())]);
+            //same as before
+            currentIndex = randNum(0, openEndedQuestions.size());
+            if ( displayOEQuestion(openEndedQuestions[currentIndex]) ) {
+                openEndedQuestions.erase(openEndedQuestions.begin() + currentIndex);
+            }
         }
     }
     
+    //nice congratulations message
     cout << "Congratulations on completing the quiz!\n";
     
+    //keeps terminal open until user presses enter (only an issue on windows?)
+    cout << "Press Enter to exit..."; 
+    cin.ignore(); 
+    cin.get(); 
     
     return 0;
 }
@@ -170,7 +184,7 @@ bool checkAnswer(string question) {
     return userAnswer == 'Y';
 }
 
-void displayOEQuestion(string question) {
+bool displayOEQuestion(string question) {
     size_t questionPos = 0;
     if (question.find('?') != string::npos) {
         questionPos = question.find('?');
@@ -188,8 +202,10 @@ void displayOEQuestion(string question) {
     
     if ( checkAnswer(question) ) {
         cout << "Correct!\n\n";
+        return true;
     } else {
         cout << "Wrong.\n\n";
+        return false;
     }
     
 }
