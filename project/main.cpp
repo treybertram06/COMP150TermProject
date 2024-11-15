@@ -23,15 +23,23 @@ COMP150-AB8 Term Project
     maybe GUI using SDL?
     let user drag the .txt file theyd like to use onto the executable 
     sometimes will skip through multiple questions leaving blank answers
+        now fixed but you need to press enter twice to input answer
 
 Created by Trey Bertram on 2024-11-11.
+
+Sources:
+    https://stackoverflow.com/questions/2075898/good-input-validation-loop-using-cin-c
+    https://stackoverflow.com/questions/25475384/when-and-why-do-i-need-to-use-cin-ignore-in-c
+    https://www.geeksforgeeks.org/passing-vector-function-cpp/
 */
+
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <ctime>
+#include <limits>
 using namespace std;
 
 //function prototypes
@@ -182,8 +190,11 @@ bool displayMCQuestion(string question) {
     
     //prompt user for answer
     char userAnswer;
-    cout << "Enter answer: ";
+    cout << "Enter answer then press enter again to confirm: ";
     cin >> userAnswer;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
     
     //check answer
     if ( checkAnswer(question, userAnswer) ) {
@@ -211,10 +222,13 @@ bool checkAnswer(string question) {
     string answerText = question.substr(questionPos + 1);
     cout << answerText << endl;
     
+    
     //prompt user to self check if their answer matches the provided one
     char userAnswer;
     cout << "Does your answer match the one provided? (Y/N): ";
     cin >> userAnswer;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
 
     //return resulkt
     return userAnswer == 'Y';
@@ -234,10 +248,14 @@ bool displayOEQuestion(string question) {
     string questionText = question.substr(2, questionPos - 1);
     cout << questionText << endl << endl;
     
-    //prompt user to enter answer
-    string userAnswer = "";
-    cout << "Enter answer: ";
-    cin >> userAnswer;
+    
+    string userAnswer; 
+    cout << "Enter answer then press enter again to confirm: "; 
+    cin.ignore(); 
+    getline(cin, userAnswer);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
     
     //if they think their answer is adequate then return true
     if ( checkAnswer(question) ) {
@@ -249,4 +267,3 @@ bool displayOEQuestion(string question) {
     }
     
 }
-
