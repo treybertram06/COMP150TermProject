@@ -56,20 +56,28 @@ int randNum(int start, int end) {
 
 int main(int argc, char *argv[]) {
 
+    //test location should be the second argumant
+    if ( argc == 2 ) {
+        //string testLocation = argv[1];
+        //cout << testLocation << endl;
+    }
+    
+    cout << "Current working directory is: " << argv[0] << endl << endl;
     //seed random number function with current time
     srand((unsigned) time(0));
     
     //import test file
     ifstream testFile;
     string line;
-
-    //testFile.open("/Users/treybertram/Desktop/testingTest.txt");
-
-    testFile.open("test.txt");
     
-    if (!testFile) {
-        cout << "Error opening test file.\n";
-        return 1;
+    string testLocation = "/Users/treybertram/Desktop/project/project/testingTest.txt";
+    testFile.open(testLocation);
+    //testFile.open("test.txt");
+    
+    while (!testFile) {
+        cout << "There was an error finding / opening your test file, please copy the path of your test here: ";
+        cin >> testLocation;
+        testFile.open(testLocation);
     }
     
     //vectors to store questions in
@@ -111,7 +119,7 @@ void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleCho
         //also checks that the selected vector is not empty and re-rolls if it is
         if ( randNum(0, 2) && !multipleChoiceQuestions.empty()) {
             //picks a random question
-            currentIndex = randNum(0, multipleChoiceQuestions.size());
+            currentIndex = randNum(0, (int)multipleChoiceQuestions.size());
             //if the user gets the question correct the function returns true
             if (displayMCQuestion(multipleChoiceQuestions[currentIndex])) {
                 //erase question that user got correct
@@ -120,7 +128,7 @@ void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleCho
             //checks that oe vector is not empty
         } else if ( !openEndedQuestions.empty() ) {
             //same as before
-            currentIndex = randNum(0, openEndedQuestions.size());
+            currentIndex = randNum(0, (int)openEndedQuestions.size());
             if ( displayOEQuestion(openEndedQuestions[currentIndex]) ) {
                 openEndedQuestions.erase(openEndedQuestions.begin() + currentIndex);
             }

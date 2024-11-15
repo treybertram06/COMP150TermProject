@@ -1,0 +1,2 @@
+TestDirectory: /Users/treybertram/Desktop/project/project/testingTest.txt
+LogDirectory: /Users/treybertram/Desktop/project/project
