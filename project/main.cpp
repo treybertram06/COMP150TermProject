@@ -22,8 +22,6 @@ COMP150-AB8 Term Project
     number 5, and think of new features
     maybe GUI using SDL?
     let user drag the .txt file theyd like to use onto the executable 
-    sometimes will skip through multiple questions leaving blank answers
-        now fixed but you need to press enter twice to input answer
 
 Created by Trey Bertram on 2024-11-11.
 
