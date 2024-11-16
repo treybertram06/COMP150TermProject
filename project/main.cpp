@@ -21,7 +21,6 @@ COMP150-AB8 Term Project
  To-do:
     number 5, and think of new features
     maybe GUI using SDL?
-    let user drag the .txt file theyd like to use onto the executable 
 
 Created by Trey Bertram on 2024-11-11.
 
