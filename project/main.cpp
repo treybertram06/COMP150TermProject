@@ -19,8 +19,19 @@ COMP150-AB8 Term Project
  
  
  To-do:
-    number 5, and think of new features
-    maybe GUI using SDL?
+    score logging and performance tracking
+    difficulty levels
+    hint system
+    timer for multiple choice only quizzes
+    better error handling for malformed quizzes
+    t/f questions or fill in the blank
+    
+    highlight specific parts of the output if possible 
+    audio feedback
+
+    refactor!!!
+    use ptrs to avoid passing around so much data
+    imporve error handling even more because users are stupid
 
 Created by Trey Bertram on 2024-11-11.
 
