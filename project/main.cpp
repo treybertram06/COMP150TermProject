@@ -29,6 +29,7 @@ Sources:
     https://stackoverflow.com/questions/2075898/good-input-validation-loop-using-cin-c
     https://stackoverflow.com/questions/25475384/when-and-why-do-i-need-to-use-cin-ignore-in-c
     https://www.geeksforgeeks.org/passing-vector-function-cpp/
+    https://www.dcs.bbk.ac.uk/~roger/cpp/week13.htm#:~:text=A%20two%2Ddimensional%20vector%20in,int%3E%20and%20the%20second%20%3E.
 */
 
 
@@ -40,7 +41,7 @@ Sources:
 #include <limits>
 using namespace std;
 
-//function prototypes
+//function prototypes because I like putting all my functions below main()
 bool checkAnswer(string question, char userAnswer);
 bool checkAnswer(string question);
 
@@ -49,6 +50,10 @@ bool displayMCQuestion(string question);
 
 void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleChoiceQuestions);
 
+string findTest(int argc, char *argv[]);
+
+vector< vector<string> > parseTest(string testPath);
+
 //generates a random integer within a specified range
 int randNum(int start, int end) {
     return start + (rand() % end);
@@ -56,30 +61,45 @@ int randNum(int start, int end) {
 
 int main(int argc, char *argv[]) {
 
-    //test location should be the second argumant
-    if ( argc == 2 ) {
-        //string testLocation = argv[1];
-        //cout << testLocation << endl;
-    }
-    
-    cout << "Current working directory is: " << argv[0] << endl << endl;
     //seed random number function with current time
     srand((unsigned) time(0));
+
+    //find the path to test.txt file
+    string testPath = findTest(argc, argv);
+
+    //parse text.txt file and put its contents in a 2d vector
+    vector< vector<string> > questions = parseTest(testPath);
+
+    //display questions at random until the user gets them all correct
+    rollQuestions(questions[0], questions[1]);
     
+    //nice congratulations message
+    cout << "Congratulations on completing the quiz!\n";
+    
+    //keeps terminal open until user presses enter (only an issue on windows)
+    cout << "Press Enter to exit..."; 
+    cin.ignore(); 
+    cin.get(); 
+    
+    return 0;
+}
+
+vector< vector<string> > parseTest(string testPath) {
     //import test file
     ifstream testFile;
     string line;
     
-    string testLocation = "/Users/treybertram/Desktop/project/project/testingTest.txt";
-    testFile.open(testLocation);
-    //testFile.open("test.txt");
+    //string testLocation = "/Users/treybertram/Desktop/project/project/testingTest.txt";
+    testFile.open(testPath);
     
     while (!testFile) {
-        cout << "There was an error finding / opening your test file, please copy the path of your test here: ";
-        cin >> testLocation;
-        testFile.open(testLocation);
+        cout << "There was an error finding / opening your test file, please copy the path of your test here or close the program and reopen by dragging test file onto the executable: ";
+        cin >> testPath;
+        testFile.open(testPath);
     }
-    
+
+    //2d vector, compiler gets angry if youd dont put the spaces in there
+    vector< vector<string> > questions;
     //vectors to store questions in
     vector<string> multipleChoiceQuestions;
     vector<string> openEndedQuestions;
@@ -96,18 +116,32 @@ int main(int argc, char *argv[]) {
             //displayOEQuestion(line);
         }
     }
+
+    //add each question vector to the 2d question vector
+    questions.push_back(openEndedQuestions);
+    questions.push_back(multipleChoiceQuestions);
+
+    return questions;
+}
+
+string findTest(int argc, char *argv[]) {
+    //path to .exe is always argv[0]
+    string currentPath = argv[0];
+    //find the last \\ or /
+    size_t pathPos = currentPath.find_last_of("/\\");
+    //cut off everythong after the \\ to leave just the current directory
+    string testPath = currentPath.substr(0, pathPos);
+    cout << "Current working directory is: " << testPath << endl << endl;
+    //add test.txt
+    testPath.append("\\test.txt");
+
+    //if theres 2 arguments then that means the user specified the test they want to use
+    if ( argc == 2 ) {
+        testPath = argv[1];
+        cout << testPath << endl << endl;
+    }
     
-    rollQuestions(openEndedQuestions, multipleChoiceQuestions);
-    
-    //nice congratulations message
-    cout << "Congratulations on completing the quiz!\n";
-    
-    //keeps terminal open until user presses enter (only an issue on windows?)
-    cout << "Press Enter to exit..."; 
-    cin.ignore(); 
-    cin.get(); 
-    
-    return 0;
+    return testPath;
 }
 
 void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleChoiceQuestions) {
