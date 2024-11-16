@@ -89,7 +89,6 @@ vector< vector<string> > parseTest(string testPath) {
     ifstream testFile;
     string line;
     
-    //string testLocation = "/Users/treybertram/Desktop/project/project/testingTest.txt";
     testFile.open(testPath);
     
     while (!testFile) {
