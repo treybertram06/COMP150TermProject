@@ -26,7 +26,6 @@ COMP150-AB8 Term Project
     better error handling for malformed quizzes
     t/f questions or fill in the blank
     
-    highlight specific parts of the output if possible 
     audio feedback
 
     refactor!!!
@@ -51,6 +50,11 @@ Sources:
 #include <limits>
 using namespace std;
 
+const int RED = 31;
+const int GREEN = 32;
+const int YELLOW = 33;
+
+
 //function prototypes because I like putting all my functions below main()
 bool checkAnswer(string question, char userAnswer);
 bool checkAnswer(string question);
@@ -63,6 +67,10 @@ void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleCho
 string findTest(int argc, char *argv[]);
 
 vector< vector<string> > parseTest(string testPath);
+
+void outputColored(string text, int color);
+void setColor(int textColor) { cout << "\033[" << textColor << "m"; }
+void resetColor() { cout << "\033[0m"; }
 
 //generates a random integer within a specified range
 int randNum(int start, int end) {
@@ -102,7 +110,7 @@ vector< vector<string> > parseTest(string testPath) {
     testFile.open(testPath);
     
     while (!testFile) {
-        cout << "There was an error finding / opening your test file, please copy the path of your test here or close the program and reopen by dragging test file onto the executable: ";
+        outputColored("There was an error finding / opening your test file, please copy the path of your test here or close the program and reopen by dragging test file onto the executable: ", YELLOW);
         cin >> testPath;
         testFile.open(testPath);
     }
@@ -131,6 +139,12 @@ vector< vector<string> > parseTest(string testPath) {
     questions.push_back(multipleChoiceQuestions);
 
     return questions;
+}
+
+void outputColored(string text, int color) {
+    setColor(color);
+    cout << text;
+    resetColor();
 }
 
 string findTest(int argc, char *argv[]) {
@@ -201,7 +215,7 @@ bool displayMCQuestion(string question) {
         questionPos = question.find('.');
     } else {
         //else there is an issue
-        std::cout << "Error parsing question string.\n";
+        outputColored("There was an error parsing the question string.\n", RED);
     }
     //question substring is from position 2 (after the M or O question identifier and the ' ') to the position of the first punctuation mark
     string questionText = question.substr(2, questionPos - 1);
@@ -247,10 +261,10 @@ bool displayMCQuestion(string question) {
     
     //check answer
     if ( checkAnswer(question, userAnswer) ) {
-        cout << "Correct!\n\n";
+        outputColored("Correct!\n\n", GREEN);
         return true;
     } else {
-        cout << "Wrong.\n\n";
+        outputColored("Wrong.\n\n", RED);
         return false;
     }
 }
@@ -264,7 +278,7 @@ bool checkAnswer(string question) {
     } else if (question.find('.') != string::npos) {
         questionPos = question.find('.');
     } else {
-        std::cout << "Error parsing question string.\n";
+        outputColored("There was an error parsing the question string.\n", RED);
     }
     
     //answer is all the text following the question
@@ -291,7 +305,7 @@ bool displayOEQuestion(string question) {
     } else if (question.find('.') != string::npos) {
         questionPos = question.find('.');
     } else {
-        std::cout << "Error parsing question string.\n";
+        outputColored("There was an error parsing the question string.\n", RED);
     }
     //the question is all the text before the punctuation mark position
     string questionText = question.substr(2, questionPos - 1);
@@ -308,10 +322,10 @@ bool displayOEQuestion(string question) {
     
     //if they think their answer is adequate then return true
     if ( checkAnswer(question) ) {
-        cout << "Correct!\n\n";
+        outputColored("Correct!\n\n", GREEN);
         return true;
     } else {
-        cout << "Wrong.\n\n";
+        outputColored("Wrong.\n\n", RED);
         return false;
     }
     
