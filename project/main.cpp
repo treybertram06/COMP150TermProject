@@ -19,14 +19,14 @@ COMP150-AB8 Term Project
  
  
  To-do:
+    first input doesnt work for some reason
     score logging and performance tracking
     difficulty levels
     hint system
     timer for multiple choice only quizzes
     better error handling for malformed quizzes
-    t/f questions or fill in the blank
     
-    audio feedback
+    audio feedback ( harder than I thought it would be )
 
     refactor!!!
     use ptrs to avoid passing around so much data
@@ -51,7 +51,7 @@ Sources:
 #include <ctime>
 #include <limits>
 //#include "dependancies/AudioFile.h"
-#include "dependancies/portaudio.h"
+//#include "dependancies/portaudio.h"
 using namespace std;
 
 //constant values for text colors
@@ -63,11 +63,13 @@ const int YELLOW = 33;
 //function prototypes because I like putting all my functions below main()
 bool checkAnswer(string question, char userAnswer);
 bool checkAnswer(string question);
+bool checkAnswer(string question, string userAnswer);
 
 bool displayOEQuestion(string question);
 bool displayMCQuestion(string question);
+bool displayFITBQuestion(string question);
 
-void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleChoiceQuestions);
+void rollQuestions(vector< vector<string> > questions);
 
 string findTest(int argc, char *argv[]);
 
@@ -120,7 +122,7 @@ int main(int argc, char *argv[]) {
     vector< vector<string> > questions = parseTest(testPath);
 
     //display questions at random until the user gets them all correct
-    rollQuestions(questions[0], questions[1]);
+    rollQuestions(questions);
     
     cleanUp();
     
@@ -145,23 +147,25 @@ vector< vector<string> > parseTest(string testPath) {
     //vectors to store questions in
     vector<string> multipleChoiceQuestions;
     vector<string> openEndedQuestions;
+    vector<string> fitbQuestions;
     
     //parse file and put each question in its vector
     while ( getline(testFile, line) ) {
         if ( line[0] == 'M' ) {
             //store in mc vector
             multipleChoiceQuestions.push_back(line);
-            //displayMCQuestion(line);
         } else if ( line[0] == 'O' ) {
             //store in oc vector
             openEndedQuestions.push_back(line);
-            //displayOEQuestion(line);
+        } else if ( line[0] == 'F' ) {
+            fitbQuestions.push_back(line);
         }
     }
 
     //add each question vector to the 2d question vector
     questions.push_back(openEndedQuestions);
     questions.push_back(multipleChoiceQuestions);
+    questions.push_back(fitbQuestions);
 
     return questions;
 }
@@ -176,6 +180,7 @@ void cleanUp() {
     cin.get();
 }
 
+//outputs colored text cause its fun
 void outputColored(string text, int color) {
     setColor(color);
     cout << text;
@@ -202,14 +207,19 @@ string findTest(int argc, char *argv[]) {
     return testPath;
 }
 
-void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleChoiceQuestions) {
+void rollQuestions(vector< vector<string> > questions) {
+    //define each vector
+    vector<string> openEndedQuestions = questions[0];
+    vector<string> multipleChoiceQuestions = questions[1];
+    vector<string> fitbQuestions = questions[2];
+
     //define current index
     int currentIndex;
     //while either the open ended or multiple chioce vectors are not empty...
-    while ( !openEndedQuestions.empty() || !multipleChoiceQuestions.empty() ) {
+    while ( !openEndedQuestions.empty() || !multipleChoiceQuestions.empty() || !fitbQuestions.empty() ) {
         // picks between the multiple choice and open ended (66% MC and 33% OE)
         //also checks that the selected vector is not empty and re-rolls if it is
-        if ( randNum(0, 2) && !multipleChoiceQuestions.empty()) {
+        if ( (randNum(0, 3) == 0) && !multipleChoiceQuestions.empty()) {
             //picks a random question
             currentIndex = randNum(0, (int)multipleChoiceQuestions.size());
             //if the user gets the question correct the function returns true
@@ -218,11 +228,17 @@ void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleCho
                 multipleChoiceQuestions.erase(multipleChoiceQuestions.begin() + currentIndex);
             }
             //checks that oe vector is not empty
-        } else if ( !openEndedQuestions.empty() ) {
+        } else if ( (randNum(0, 3) == 1) && !openEndedQuestions.empty() ) {
             //same as before
             currentIndex = randNum(0, (int)openEndedQuestions.size());
             if ( displayOEQuestion(openEndedQuestions[currentIndex]) ) {
                 openEndedQuestions.erase(openEndedQuestions.begin() + currentIndex);
+            }
+            //display fill in the blank questions
+        } else if ( (randNum(0, 3) == 2) && !fitbQuestions.empty() ) {
+            currentIndex = randNum(0, (int)fitbQuestions.size());
+            if ( displayFITBQuestion(fitbQuestions[currentIndex]) ) {
+                fitbQuestions.erase(fitbQuestions.begin() + currentIndex);
             }
         }
     }
@@ -346,10 +362,10 @@ bool displayOEQuestion(string question) {
     string questionText = question.substr(2, questionPos - 1);
     cout << questionText << endl << endl;
     
-    
-    string userAnswer; 
+    //prompt user for answer
+    string userAnswer;
     cout << "Enter answer then press enter again to confirm: "; 
-    cin.ignore(); 
+    //cin.ignore();
     getline(cin, userAnswer);
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
@@ -365,3 +381,38 @@ bool displayOEQuestion(string question) {
     }
     
 }
+
+bool displayFITBQuestion(string question) {
+    size_t questionPos = findPunc(question);
+    if (questionPos == string::npos) {
+        return false;
+    }
+    
+    //question substring is from position 2 (after the M or O question identifier and the ' ') to the position of the first punctuation mark
+    string questionText = question.substr(2, questionPos - 1);
+    //output the question
+    cout << questionText << endl << endl;
+    
+    string userAnswer;
+    cout << "Enter answer then press enter again to confirm: ";
+    //cin.ignore();
+    getline(cin, userAnswer);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
+    if ( checkAnswer(question, userAnswer) ) {
+        outputColored("Correct!\n\n", GREEN);
+        return true;
+    } else {
+        outputColored("Wrong.\n\n", RED);
+        return false;
+    }
+}
+
+bool checkAnswer(string question, string userAnswer) {
+    size_t questionPos = findPunc(question);
+    string answer = question.substr(questionPos + 2);
+    //cout << userAnswer << "|" << answer << endl;
+    
+    return userAnswer == answer;
+}
+

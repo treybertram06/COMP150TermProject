@@ -1,3 +1,4 @@
 M Multiple Choice Question? ~A. Option A ~B. Option B ~C. You can add as many options as you'd like ~=C
-O Open ended questions can be whatever you want but the question must contain only one instance of a period or question mark, that is because the program identifies where the question is in the string using those symbols. All the text following the first instance of those punctuation characters will be the correct answer.
 O How are questions separated? Questions are separated by line, each line represents a question.
+F this is a _ _ _ _ question. fill in the blank
+F Audrey is _ _ _. fat and stupid
