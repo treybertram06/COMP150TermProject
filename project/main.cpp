@@ -39,6 +39,8 @@ Sources:
     https://stackoverflow.com/questions/25475384/when-and-why-do-i-need-to-use-cin-ignore-in-c
     https://www.geeksforgeeks.org/passing-vector-function-cpp/
     https://www.dcs.bbk.ac.uk/~roger/cpp/week13.htm#:~:text=A%20two%2Ddimensional%20vector%20in,int%3E%20and%20the%20second%20%3E.
+    https://www.geeksforgeeks.org/how-to-change-console-color-in-cpp/
+    https://github.com/adamstark/AudioFile
 */
 
 
@@ -48,8 +50,11 @@ Sources:
 #include <fstream>
 #include <ctime>
 #include <limits>
+//#include "dependancies/AudioFile.h"
+#include "dependancies/portaudio.h"
 using namespace std;
 
+//constant values for text colors
 const int RED = 31;
 const int GREEN = 32;
 const int YELLOW = 33;
@@ -72,18 +77,44 @@ void outputColored(string text, int color);
 void setColor(int textColor) { cout << "\033[" << textColor << "m"; }
 void resetColor() { cout << "\033[0m"; }
 
+void cleanUp();
+
 //generates a random integer within a specified range
 int randNum(int start, int end) {
     return start + (rand() % end);
 }
+/*
+//should pass in a vector full of every audio file and loop through them, if anything doesnt load return false else finish the loop and return true
+bool loadAudio(string path, AudioFile<double>* correctSound, AudioFile<double>* incorrectSound) {
+    if ( correctSound->load(path + "assets/sounds/correct.wav") && incorrectSound->load(path + "assets/sounds.correct.wav") ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+ */
 
 int main(int argc, char *argv[]) {
+    string currentPath = argv[0];
+    size_t pathPos = currentPath.find_last_of("/\\");
+    string path = currentPath.substr(0, pathPos);
+    /*
+    //load audio files
+    AudioFile<double> correctSound;
+    AudioFile<double> incorrectSound;
+    if ( !loadAudio(path, &correctSound, &incorrectSound) ) {
+        outputColored("Error loading audio files.", YELLOW);
+    }
+     */
+    
 
     //seed random number function with current time
     srand((unsigned) time(0));
 
     //find the path to test.txt file
     string testPath = findTest(argc, argv);
+    
+    //create
 
     //parse text.txt file and put its contents in a 2d vector
     vector< vector<string> > questions = parseTest(testPath);
@@ -91,13 +122,7 @@ int main(int argc, char *argv[]) {
     //display questions at random until the user gets them all correct
     rollQuestions(questions[0], questions[1]);
     
-    //nice congratulations message
-    cout << "Congratulations on completing the quiz!\n";
-    
-    //keeps terminal open until user presses enter (only an issue on windows)
-    cout << "Press Enter to exit..."; 
-    cin.ignore(); 
-    cin.get(); 
+    cleanUp();
     
     return 0;
 }
@@ -139,6 +164,16 @@ vector< vector<string> > parseTest(string testPath) {
     questions.push_back(multipleChoiceQuestions);
 
     return questions;
+}
+
+void cleanUp() {
+    //nice congratulations message
+    cout << "Congratulations on completing the quiz!\n";
+    
+    //keeps terminal open until user presses enter (only an issue on windows)
+    cout << "Press Enter to exit...";
+    cin.ignore();
+    cin.get();
 }
 
 void outputColored(string text, int color) {
@@ -193,6 +228,21 @@ void rollQuestions(vector<string> openEndedQuestions, vector<string> multipleCho
     }
 }
 
+size_t findPunc(string question) {
+    //the string::find method returns npos if the character is not found in the string
+    if (question.find('?') != string::npos) {
+        //if a question mark is found then the question end position is equal to the position of it
+        return question.find('?');
+        //else check for a perios and do same as before
+    } else if (question.find('.') != string::npos) {
+        return question.find('.');
+    } else {
+        //else there is an issue
+        outputColored("There was an error parsing the question string.\n", RED);
+        return string::npos;
+    }
+}
+
 bool checkAnswer(string question, char userAnswer) {
     //initialize answer position
     size_t answerPos = 0;
@@ -204,18 +254,10 @@ bool checkAnswer(string question, char userAnswer) {
 }
 
 bool displayMCQuestion(string question) {
-    //initalize question position 
-    size_t questionPos = 0;
-    //the string::find method returns npos if the character is not found in the string
-    if (question.find('?') != string::npos) {
-        //if a question mark is found then the question end position is equal to the position of it
-        questionPos = question.find('?');
-        //else check for a perios and do same as before
-    } else if (question.find('.') != string::npos) {
-        questionPos = question.find('.');
-    } else {
-        //else there is an issue
-        outputColored("There was an error parsing the question string.\n", RED);
+    
+    size_t questionPos = findPunc(question);
+    if (questionPos == string::npos) {
+        return false;
     }
     //question substring is from position 2 (after the M or O question identifier and the ' ') to the position of the first punctuation mark
     string questionText = question.substr(2, questionPos - 1);
@@ -271,14 +313,10 @@ bool displayMCQuestion(string question) {
 
 //check opeb ended answer
 bool checkAnswer(string question) {
-    //finds position of question end
-    size_t questionPos = 0;
-    if (question.find('?') != string::npos) {
-        questionPos = question.find('?');
-    } else if (question.find('.') != string::npos) {
-        questionPos = question.find('.');
-    } else {
-        outputColored("There was an error parsing the question string.\n", RED);
+    
+    size_t questionPos = findPunc(question);
+    if (questionPos == string::npos) {
+        return false;
     }
     
     //answer is all the text following the question
@@ -298,15 +336,12 @@ bool checkAnswer(string question) {
 }
 
 bool displayOEQuestion(string question) {
-    //find where question ends
-    size_t questionPos = 0;
-    if (question.find('?') != string::npos) {
-        questionPos = question.find('?');
-    } else if (question.find('.') != string::npos) {
-        questionPos = question.find('.');
-    } else {
-        outputColored("There was an error parsing the question string.\n", RED);
+    
+    size_t questionPos = findPunc(question);
+    if (questionPos == string::npos) {
+        return false;
     }
+    
     //the question is all the text before the punctuation mark position
     string questionText = question.substr(2, questionPos - 1);
     cout << questionText << endl << endl;
