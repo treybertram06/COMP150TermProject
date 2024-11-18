@@ -1,4 +1,6 @@
+// This is a comment and will not be read by the program
+// For fill in the blank questions, there's one '_' for each word expected in the answer
+// The format of the answer should be clearly specified in the question if it deviates from the norm
 M Multiple Choice Question? ~A. Option A ~B. Option B ~C. You can add as many options as you'd like ~=C
 O How are questions separated? Questions are separated by line, each line represents a question.
 F this is a _ _ _ _ question. fill in the blank
-F Audrey is _ _ _. fat and stupid
