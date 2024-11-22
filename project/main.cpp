@@ -21,16 +21,11 @@ COMP150-AB8 Term Project
  To-do:
     first input doesnt work for some reason
     score logging and performance tracking
-    difficulty levels
     hint system
-    timer for multiple choice only quizzes
     better error handling for malformed quizzes
-    
-    audio feedback ( harder than I thought it would be )
+    improve error handling
 
-    refactor!!!
-    use ptrs to avoid passing around so much data
-    imporve error handling even more because users are stupid
+
 
 Created by Trey Bertram on 2024-11-11.
 
@@ -50,8 +45,6 @@ Sources:
 #include <fstream>
 #include <ctime>
 #include <limits>
-//#include "dependancies/AudioFile.h"
-//#include "dependancies/portaudio.h"
 using namespace std;
 
 //constant values for text colors
@@ -85,29 +78,11 @@ void cleanUp();
 int randNum(int start, int end) {
     return start + (rand() % end);
 }
-/*
-//should pass in a vector full of every audio file and loop through them, if anything doesnt load return false else finish the loop and return true
-bool loadAudio(string path, AudioFile<double>* correctSound, AudioFile<double>* incorrectSound) {
-    if ( correctSound->load(path + "assets/sounds/correct.wav") && incorrectSound->load(path + "assets/sounds.correct.wav") ) {
-        return true;
-    } else {
-        return false;
-    }
-}
- */
 
 int main(int argc, char *argv[]) {
     string currentPath = argv[0];
     size_t pathPos = currentPath.find_last_of("/\\");
     string path = currentPath.substr(0, pathPos);
-    /*
-    //load audio files
-    AudioFile<double> correctSound;
-    AudioFile<double> incorrectSound;
-    if ( !loadAudio(path, &correctSound, &incorrectSound) ) {
-        outputColored("Error loading audio files.", YELLOW);
-    }
-     */
     
 
     //seed random number function with current time
