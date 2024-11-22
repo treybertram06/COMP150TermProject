@@ -20,6 +20,7 @@ COMP150-AB8 Term Project
  To-do:
     first input doesnt work for some reason if its a fitb
     hint system
+    audio and gui using portaudio and sdl
 
 Created by Trey Bertram on 2024-11-11.
 
@@ -113,6 +114,7 @@ vector< vector<string> > parseTest(string testPath) {
     
     testFile.open(testPath);
     
+    //while testFile is empty prompt user to provide file
     while (!testFile) {
         outputColored("There was an error finding / opening your test file, please copy the path of your test here or close the program and reopen by dragging test file onto the executable: ", YELLOW);
         cin >> testPath;
@@ -135,6 +137,7 @@ vector< vector<string> > parseTest(string testPath) {
             //store in oc vector
             openEndedQuestions.push_back(line);
         } else if ( line[0] == 'F' ) {
+            //store in fitb vector
             fitbQuestions.push_back(line);
         }
     }
@@ -377,6 +380,7 @@ bool displayFITBQuestion(string question) {
     getline(cin, userAnswer);
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
+    //if user gets question correct then return true
     if ( checkAnswer(question, userAnswer) ) {
         outputColored("Correct!\n\n", GREEN);
         return true;
