@@ -5,27 +5,21 @@ COMP150-AB8 Term Project
 
  This program will take a .txt file full of questions as input
  then parse each line and put the multiple choice questions
- in one vector and the open ended ones in the other.
+ in one vector and the open ended ones in the other (and fill in the blank).
  It will then quiz the user and track their performance and
  improvement in a log file. For open ended questions the user
  will compare their answer to the provided one and decide if
  they got it correct.
  
  1) Input text file
- 2) create a vector for both open and multiple chice questions
+ 2) create a vector for open, multiple chice questions and fill in the blank
  3) Parse each question at random and output certain parts of the question to the user in a readable format
  4) If user gets question correct then remove it from its vector
- 5) Create a log file for the user to track thier performance
  
  
  To-do:
-    first input doesnt work for some reason
-    score logging and performance tracking
+    first input doesnt work for some reason if its a fitb
     hint system
-    better error handling for malformed quizzes
-    improve error handling
-
-
 
 Created by Trey Bertram on 2024-11-11.
 
@@ -35,7 +29,15 @@ Sources:
     https://www.geeksforgeeks.org/passing-vector-function-cpp/
     https://www.dcs.bbk.ac.uk/~roger/cpp/week13.htm#:~:text=A%20two%2Ddimensional%20vector%20in,int%3E%20and%20the%20second%20%3E.
     https://www.geeksforgeeks.org/how-to-change-console-color-in-cpp/
-    https://github.com/adamstark/AudioFile
+    https://cplusplus.com/reference/vector/vector/push_back/
+    https://cplusplus.com/reference/vector/vector/size/
+    https://stackoverflow.com/questions/47706633/find-first-character-of-string-then-compare-it-with-a-symbol-c
+    https://www.geeksforgeeks.org/string-find-in-cpp/
+    https://cplusplus.com/reference/string/string/npos/#:~:text=npos%20is%20a%20static%20member,used%20to%20indicate%20no%20matches.
+    https://stackoverflow.com/questions/51335255/how-to-pass-the-first-character-of-a-string-to-a-char
+    https://www.bitdegree.org/learn/random-number-generator-cpp#:~:text=You%20can%20create%20a%20random,all%20about%20correctness%20and%20predictability.
+    https://www.geeksforgeeks.org/how-to-remove-an-element-from-vector-in-cpp/
+
 */
 
 
@@ -183,7 +185,7 @@ string findTest(int argc, char *argv[]) {
 }
 
 void rollQuestions(vector< vector<string> > questions) {
-    //define each vector
+    //make it a bit easier to read by splitting apart the questions vectorvector
     vector<string> openEndedQuestions = questions[0];
     vector<string> multipleChoiceQuestions = questions[1];
     vector<string> fitbQuestions = questions[2];
@@ -228,8 +230,9 @@ size_t findPunc(string question) {
     } else if (question.find('.') != string::npos) {
         return question.find('.');
     } else {
-        //else there is an issue
+        //else there is an issue so abort the program
         outputColored("There was an error parsing the question string.\n", RED);
+        exit(1);
         return string::npos;
     }
 }
@@ -388,6 +391,16 @@ bool checkAnswer(string question, string userAnswer) {
     string answer = question.substr(questionPos + 2);
     //cout << userAnswer << "|" << answer << endl;
     
-    return userAnswer == answer;
+    if (userAnswer == answer) {
+        return true;
+    } else {
+        //output the correct answer
+        cout << answer << endl;
+        //ask user if it matches thier answer
+        cout << "Does your answer match the one provided (Y/N)?: \n";
+        cin >> userAnswer;
+        //if the first character of userAnswer is equal to Y then they got it right
+        return userAnswer[0] == 'Y';
+    }
 }
 

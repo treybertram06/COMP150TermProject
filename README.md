@@ -19,13 +19,14 @@ This project is a command-line quiz application that I'm submitting as my COMP15
 
 ### Input File Format
 The input file should:
-- Begin each question with `M` (for Multiple Choice) or `O` (for Open-Ended), followed by the question text.
+- Begin each question with `M` (for Multiple Choice), `O` (for Open-Ended) or 'F' (for Fill in the Blank), followed by the question text.
 - For multiple-choice questions:
   - Use `~` to denote options.
   - Include the correct answer immediately after `=` in the format `=A` (ex. "What is 2+2? ~A. Four ~B. Three =A").
 - For open-ended questions:
   - Provide the answer after the punctuation mark ending the question (ex. "What is the capital of France? Paris").
-
+- For Fill in the Blank questions:
+    - Simply put the correct answer after the question like the open ended ones.
 ### Example Input
 M What is 2+2? ~A. Four ~B. Three =A 
 O What is the capital of France? Paris
