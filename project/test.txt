@@ -1,0 +1,31 @@
+M What does HTTP stand for? ~A. HyperText Transfer Protocol ~B. HyperText Transmission Protocol ~C. HighText Transfer Protocol ~D. HyperText Translation Protocol ~=A
+O What is an IP address? An IP address is a numerical label assigned to each device connected to a computer network that uses the Internet Protocol for communication.
+F A _ is a set of rules governing the exchange of data between devices. protocol
+M Which data structure uses the LIFO principle? ~A. Queue ~B. Stack ~C. Linked List ~D. Array ~=B
+O What is the function of a firewall? A firewall monitors and controls incoming and outgoing network traffic based on predetermined security rules.
+F A _ converts high-level programming code into machine code. compiler
+M Which of the following is a NoSQL database? ~A. MySQL ~B. PostgreSQL ~C. MongoDB ~D. Oracle ~=C
+O What is cloud computing? Cloud computing is the delivery of computing services over the internet, including storage, processing, and software.
+F The _ is responsible for performing arithmetic and logical operations in a CPU. ALU
+M What is the default port for HTTP? ~A. 21 ~B. 80 ~C. 443 ~D. 8080 ~=B
+O Explain what a subnet mask does. A subnet mask defines the range of IP addresses within a network.
+F A _ allows multiple devices to share a single IP address for accessing the internet. NAT
+M Which programming paradigm is Python primarily associated with? ~A. Functional ~B. Object-Oriented ~C. Procedural ~D. Logic ~=B
+O What is the difference between RAM and ROM? RAM is volatile memory used for temporary data storage, while ROM is non-volatile and stores data permanently.
+F A _ stores frequently accessed data to speed up future requests. cache
+M Which of the following sorting algorithms has the best average-case performance? ~A. Bubble Sort ~B. Merge Sort ~C. Insertion Sort ~D. Selection Sort ~=B
+M What is the smallest unit of data in a computer? ~A. Byte ~B. Bit ~C. Nibble ~D. Word ~=B
+M Which of these is not a programming language? ~A. Java ~B. HTML ~C. Python ~D. C++ ~=B
+M What does SQL stand for? ~A. Structured Query Language ~B. Standard Query Language ~C. Sequential Query Language ~D. Server Query Language ~=A
+M Which type of network covers the largest geographical area? ~A. LAN ~B. MAN ~C. WAN ~D. PAN ~=C
+M What is the primary purpose of an SSD? ~A. To store data permanently ~B. To improve internet speed ~C. To execute code ~D. To act as temporary memory ~=A
+M Which of these protocols is used for sending emails? ~A. FTP ~B. SMTP ~C. HTTP ~D. DNS ~=B
+M What does DNS stand for? ~A. Data Network System ~B. Domain Name System ~C. Distributed Network Service ~D. Digital Name Service ~=B
+M Which of the following is an interpreted language? ~A. C ~B. Python ~C. Java ~D. Assembly ~=B
+M What is the primary use of a GPU? ~A. General processing ~B. Graphics rendering ~C. Memory management ~D. Network communication ~=B
+M What is a primary key in a database? ~A. A key that unlocks tables ~B. A unique identifier for each record ~C. A key used for encryption ~D. A backup key for data retrieval ~=B
+M Which logic gate outputs true only when all inputs are true? ~A. OR ~B. AND ~C. XOR ~D. NOR ~=B
+M What does the 'ping' command test? ~A. CPU performance ~B. Network connectivity ~C. File system errors ~D. Disk speed ~=B
+M What is the main function of a DNS server? ~A. To host websites ~B. To resolve domain names to IP addresses ~C. To manage email services ~D. To secure networks ~=B
+M Which of these is a compiled language? ~A. JavaScript ~B. Python ~C. C ~D. PHP ~=C
+M What is the primary purpose of a RAID system? ~A. Data encryption ~B. Data redundancy and performance ~C. Virus protection ~D. Network acceleration ~=B

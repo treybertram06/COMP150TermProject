@@ -1,6 +1,37 @@
-// This is a comment and will not be read by the program
-// For fill in the blank questions, there's one '_' for each word expected in the answer
-// The format of the answer should be clearly specified in the question if it deviates from the norm
-M Multiple Choice Question? ~A. Option A ~B. Option B ~C. You can add as many options as you'd like ~=C
-O How are questions separated? Questions are separated by line, each line represents a question.
-F this is a _ _ _ _ question. fill in the blank
+//Example Quiz File: test.txt
+//
+//Instructions:
+//1. Each line represents a single question.
+//2. Questions are categorized as follows:
+//   - Multiple Choice: Start with 'M'
+//   - Open Ended: Start with 'O'
+//   - Fill in the Blank: Start with 'F'
+//3. Question format:
+//   - Multiple Choice:
+//     M Question? ~A. Option A ~B. Option B ~C. Option C ~D. Option D ~=CorrectAnswer
+//     Example: M What does CPU stand for? ~A. Central Processing Unit ~B. Central Performance Unit ~C. Computer Processing Unit ~D. Core Processing Unit ~=A
+//   - Open Ended:
+//     O Question followed by answer.
+//     Example: O Explain the role of the CPU. The CPU processes instructions and manages tasks in a computer system.
+//   - Fill in the Blank:
+//     F Question with blanks for answers. Include the correct answer after the question.
+//     Example: F A _ stores data temporarily, while a _ stores data permanently. RAM hard drive
+//4. Use '~' to separate answer options for multiple-choice questions.
+//5. For fill-in-the-blank questions, use underscores (_) for missing words.
+//Example Questions:
+
+// Multiple Choice Question
+M What is the capital of France? ~A. Berlin ~B. Madrid ~C. Paris ~D. Rome ~=C
+
+// Open Ended Question
+O What is the purpose of DNS? DNS translates domain names into IP addresses.
+
+// Fill in the Blank Question
+F The primary function of a _ is to store and retrieve data. hard drive
+
+// Multiple Choice Question
+M Which programming language is known for its simplicity? ~A. Java ~B. Python ~C. C++ ~D. Assembly ~=B
+
+// Open Ended Question
+O Define an algorithm. An algorithm is a step-by-step procedure for solving a problem.
+
